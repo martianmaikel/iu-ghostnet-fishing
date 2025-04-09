@@ -1,0 +1,24 @@
+<ui:composition template="/WEB-INF/layouts/main.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+  <ui:define name="title">Startseite</ui:define>
+
+  <ui:define name="content">
+    <h2>Geisternetze Übersicht</h2>
+
+    <p:outputLabel value="Nachfolgend eine Liste der zuletzt gemeldeten Geisternetze:" /><br/>
+    <ui:include src="/WEB-INF/components/ghostnets-datatable.xhtml">
+      <ui:param name="nets" value="#{publicGhostNetsController.ghostNets}" />
+    </ui:include>
+
+    <p>
+      <h:outputLink value="#{request.contextPath}/report-net.xhtml">Geisternetz jetzt melden</h:outputLink>
+    </p>
+    <p>
+      <h:outputLink value="#{request.contextPath}/register.xhtml">Registrieren Sie sich als Berger</h:outputLink>, wenn Sie Expertise besitzen und mit uns zusammen Geisternetze weltweit bergen wollen!
+    </p>
+  </ui:define>
+</ui:composition>
