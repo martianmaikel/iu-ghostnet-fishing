@@ -182,6 +182,28 @@ public class GhostNetDetailsController implements Serializable {
         }
     }
 
+    @Transactional
+    public void releaseNet() {
+        if (selectedNet != null && session.isLoggedIn()) {
+            if (selectedNet.getRecoveryPerson() != null &&
+                    selectedNet.getRecoveryPerson().getId().equals(session.getCurrentUser().getId())) {
+
+                ghostNetManageService.releaseNet(selectedNet);
+                selectedNet.setRecoveryPerson(null);
+
+                try {
+                    FacesContext.getCurrentInstance()
+                            .getExternalContext()
+                            .redirect(FacesContext.getCurrentInstance()
+                                    .getExternalContext()
+                                    .getRequestContextPath() + "/ghostnet-details.xhtml?net_id=" + selectedNet.getId());
+                } catch (IOException e) {
+                    e.printStackTrace(); // Logging wäre auch nice
+                }
+            }
+        }
+    }
+
 
 
 }

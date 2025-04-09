@@ -84,15 +84,32 @@
         </p:panel>
         </div>
         <div class="ui-g-12 ui-md-6">
-            <p:panel header="Bergende Person" rendered="#{recoveryPersonSession.loggedIn and empty ghostNetDetailsController.selectedNet.recoveryPerson}">
+            <!-- Wenn das Netz noch niemandem zugewiesen ist -->
+            <p:panel header="Bergende Person"
+                     rendered="#{recoveryPersonSession.loggedIn and empty ghostNetDetailsController.selectedNet.recoveryPerson}">
                 <h:form>
                     <p:commandButton value="Dieses Netz übernehmen"
-                                 icon="pi pi-user-plus"
-                                 action="#{ghostNetDetailsController.assignToCurrentUser(ghostNetDetailsController.selectedNet)}"
-                                 update="@form"
-                                 styleClass="p-button-success mt-3" />
+                                     icon="pi pi-user-plus"
+                                     action="#{ghostNetDetailsController.assignToCurrentUser(ghostNetDetailsController.selectedNet)}"
+                                     update="@form"
+                                     styleClass="p-button-success mt-3" />
                 </h:form>
             </p:panel>
+
+            <!-- Wenn der aktuelle User der Bergende ist -->
+            <p:panel header="Bergende Person"
+                     rendered="#{recoveryPersonSession.loggedIn
+                     and ghostNetDetailsController.selectedNet.recoveryPerson != null
+                     and ghostNetDetailsController.selectedNet.recoveryPerson.id == recoveryPersonSession.currentUser.id}">
+                <h:form>
+                    <p:commandButton value="Netz wieder freigeben"
+                                     icon="pi pi-user-minus"
+                                     action="#{ghostNetDetailsController.releaseNet}"
+                                     update="@form"
+                                     styleClass="p-button-warning mt-3" />
+                </h:form>
+            </p:panel>
+
         </div>
         <div class="ui-g-12 ui-md-6">
 

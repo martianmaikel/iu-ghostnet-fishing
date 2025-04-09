@@ -103,6 +103,13 @@ public class GhostNetManageService implements Serializable {
         }
         em.persist(net);
     }
-
+    @Transactional
+    public void releaseNet(GhostNet net) {
+        if (net != null) {
+            net.setRecoveryPerson(null);
+            net.setStatus(GhostNetStatus.REPORTED);
+            em.merge(net);
+        }
+    }
 
 }
