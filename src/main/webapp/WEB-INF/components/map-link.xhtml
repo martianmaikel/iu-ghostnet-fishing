@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets">
+
+    <ui:param name="lat" value="#{lat}" />
+    <ui:param name="lng" value="#{lng}" />
+
+    <h:panelGroup rendered="#{not empty lat and not empty lng}">
+        <h:outputLink value="#{'https://www.google.com/maps?q='.concat(lat).concat(',').concat(lng)}"
+                      target="_blank"
+                      style="font-size: 0.8rem; text-decoration: none; color: #007BFF;">
+            📍 Auf Google Maps anzeigen
+        </h:outputLink>
+    </h:panelGroup>
+
+    <h:outputText value="Keine Koordinaten vorhanden"
+                  rendered="#{empty lat or empty lng}"
+                  style="font-size: 0.8rem; color: #888;" />
+</ui:composition>

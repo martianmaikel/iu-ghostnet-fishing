@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets">
+
+    <ui:param name="person" value="#{person}" />
+
+    <h:panelGroup layout="block" styleClass="recovery-person-badge" rendered="#{not empty person}">
+        <h:graphicImage library="images" name="default-avatar.png" alt="Avatar" styleClass="avatar" />
+        <div>
+            <span class="name">#{person.name}</span><br/>
+            <span rendered="#{not empty person.phoneNumber}">📞 #{person.phoneNumber}</span>
+        </div>
+    </h:panelGroup>
+
+    <style>
+        .recovery-person-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.3rem 0.6rem;
+            border-radius: 9999px;
+            background-color: #eef2f7;
+            font-size: 0.9rem;
+            color: #1e293b;
+            border: 1px solid #cbd5e1;
+        }
+
+        .recovery-person-badge .avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            object-fit: cover;
+        }
+
+        .recovery-person-badge .name {
+            font-weight: 500;
+        }
+    </style>
+</ui:composition>

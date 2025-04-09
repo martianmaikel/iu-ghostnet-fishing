@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:param name="nets" value="#{nets}"  />
+
+    <p:dataTable id="netsTable" value="#{nets}" var="net" stripedRows="true">
+
+        <p:column headerText="Ort">
+            <p:link value="#{net.location}"
+                    outcome="/ghostnet-details"
+                    styleClass="p-button-link">
+                <f:param name="net_id" value="#{net.id}" />
+            </p:link>
+
+            <h:panelGroup rendered="#{not empty net.lat and not empty net.lng}">
+                <br/>
+                <h:outputText value="#{net.latLngFormatted}" style="font-size: 0.8rem; color: #888;" />
+                <br/>
+                <ui:include src="/WEB-INF/components/map-link.xhtml">
+                    <ui:param name="lat" value="#{net.lat}" />
+                    <ui:param name="lng" value="#{net.lng}" />
+                </ui:include>
+            </h:panelGroup>
+        </p:column>
+
+        <p:column headerText="Größe geschätzt (m²)">
+            <h:outputText value="#{net.sizeInSquareMeters}" />
+        </p:column>
+
+        <p:column headerText="Status">
+            <ui:include src="/WEB-INF/components/net-status-badge.xhtml">
+                <ui:param name="status" value="#{net.statusStr}" />
+            </ui:include>
+        </p:column>
+
+        <p:column headerText="bergende Person">
+            <ui:include src="/WEB-INF/components/user-badge.xhtml">
+                <ui:param name="person" value="#{net.recoveryPerson}" />
+            </ui:include>
+        </p:column>
+        <p:column headerText="Details anzeigen">
+            <p:link value="Zu den Details"
+                    outcome="/ghostnet-details"
+                    styleClass="p-button-link">
+                <f:param name="net_id" value="#{net.id}" />
+            </p:link>
+        </p:column>
+
+
+    </p:dataTable>
+</ui:composition>

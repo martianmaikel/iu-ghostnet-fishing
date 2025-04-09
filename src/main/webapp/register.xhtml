@@ -1,0 +1,57 @@
+<ui:composition template="/WEB-INF/layouts/main.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Registrieren</ui:define>
+
+    <ui:define name="content">
+        <h2 class="text-center">Registrieren als Berger</h2>
+
+        <h:form styleClass="form-wrapper">
+
+            <div class="card">
+                <div class="ui-fluid formgrid grid">
+
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel for="name" value="Name" />
+                        <p:inputText id="name" value="#{authRecoveryPersonController.newUser.name}" required="true" />
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel for="email" value="E-Mail" />
+                        <p:inputText id="email" value="#{authRecoveryPersonController.newUser.email}" required="true" />
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel for="phoneNumber" value="Telefonnummer" />
+                        <p:inputText id="phoneNumber" value="#{authRecoveryPersonController.newUser.phoneNumber}" required="true" />
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel for="password" value="Passwort" />
+                        <p:password id="password" value="#{authRecoveryPersonController.newUser.password}" required="true" />
+                    </div>
+
+                    <div class="field col-12 text-center mt-3">
+                        <p:commandButton value="Registrieren"
+                                         icon="pi pi-user-plus"
+                                         action="#{authRecoveryPersonController.register}"
+                                         update="@form"
+                                         styleClass="mt-2" />
+                    </div>
+
+                </div>
+            </div>
+        </h:form>
+
+        <p class="text-center mt-3">
+            Bereits registriert?
+            <h:outputLink value="login.xhtml">Jetzt einloggen</h:outputLink>
+        </p>
+
+
+    </ui:define>
+</ui:composition>

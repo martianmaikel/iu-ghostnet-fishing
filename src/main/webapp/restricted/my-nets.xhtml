@@ -1,0 +1,37 @@
+<ui:composition template="/WEB-INF/layouts/main.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">Meine Geisternetze</ui:define>
+
+    <ui:define name="content">
+        <h2>Meine Geisternetze</h2>
+
+        <p:outputLabel value="Die Geisternetze für die du dich gemeldet hast:" /><br/>
+
+        <h:panelGroup rendered="#{not empty ghostNetController.myGhostNets}">
+            <ui:include src="/WEB-INF/components/ghostnets-datatable.xhtml">
+                <ui:param name="nets" value="#{ghostNetController.myGhostNets}" />
+            </ui:include>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{empty ghostNetController.myGhostNets}">
+            <p:message severity="info"
+                       summary="Keine Netze zugewiesen"
+                       detail="Ihnen wurde bisher noch kein Geisternetz zur Bergung zugewiesen." />
+            <p class="mt-2">
+                <h:outputLink value="#{request.contextPath}/restricted/open-nets.xhtml">Alle gemeldeten Geisternetze anzeigen</h:outputLink>
+            </p>
+        </h:panelGroup>
+
+        <p class="mt-4">
+            <h:outputLink value="#{request.contextPath}/report-net.xhtml">Geisternetz jetzt melden</h:outputLink>
+        </p>
+
+        <p>
+            <h:outputLink value="#{request.contextPath}/register.xhtml">Registrieren Sie sich als Berger</h:outputLink>,
+            wenn Sie Expertise besitzen und mit uns zusammen Geisternetze weltweit bergen wollen!
+        </p>
+    </ui:define>
+</ui:composition>

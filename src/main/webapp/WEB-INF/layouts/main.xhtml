@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title><ui:insert name="title">Ghost Net Fishing</ui:insert></title>
+    <meta charset="UTF-8" />
+    <h:outputStylesheet name="style.css" library="css"/>
+</h:head>
+
+<h:body>
+    <div class="page-container" >
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">Ghost Net Fishing</h1>
+            <nav class="nav" aria-description="main-link">
+
+                <h:outputLink value="#{request.contextPath}/start.xhtml" styleClass="nav-link" >Startseite</h:outputLink>
+                <h:outputLink value="#{request.contextPath}/report-net.xhtml" styleClass="nav-link" >Netz melden</h:outputLink>
+
+            </nav>
+            <nav class="nav" aria-description="auth-link">
+                <!-- Wenn NICHT eingeloggt -->
+                <h:panelGroup rendered="#{not recoveryPersonSession.loggedIn}">
+                    <h:outputLink value="#{request.contextPath}/login.xhtml" styleClass="nav-link">Login</h:outputLink>
+                    <h:outputLink value="#{request.contextPath}/register.xhtml" styleClass="nav-link">Als Berger registrieren</h:outputLink>
+                </h:panelGroup>
+
+                <!-- Wenn eingeloggt -->
+                <h:panelGroup rendered="#{recoveryPersonSession.loggedIn}">
+                    <span class="nav-user">Willkommen, #{recoveryPersonSession.currentUser.name} 😊</span>
+                    <h:outputLink value="#{request.contextPath}/restricted/dashboard.xhtml" styleClass="nav-link">Mein Bereich</h:outputLink>
+                    <h:form style="display:inline;">
+                        <h:commandLink action="#{authRecoveryPersonController.logout}" value="Logout" styleClass="nav-link" />
+                    </h:form>
+                </h:panelGroup>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content" style="max-width: 1400px; margin: 0 auto;">
+            <ui:insert name="content" />
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2025 Ghost Net Fishing</p>
+        </footer>
+    </div>
+</h:body>
+</html>

@@ -1,0 +1,181 @@
+<ui:composition template="/WEB-INF/layouts/main.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <f:metadata>
+        <f:viewParam name="net_id" value="#{ghostNetDetailsController.selectedNetId}" />
+        <f:viewAction action="#{ghostNetDetailsController.loadNet(ghostNetDetailsController.selectedNetId)}" />
+    </f:metadata>
+
+    <ui:define name="title">Geisternetz Details</ui:define>
+
+    <ui:define name="content">
+        <h:panelGroup rendered="#{ghostNetDetailsController.selectedNet == null}">
+            <p:messages autoUpdate="true" />
+            <p:panel header="Fehler" styleClass="p-panel-danger">
+                <h:outputText value="Das Geisternetz konnte nicht gefunden werden. Bitte überprüfen Sie den Link oder wählen Sie ein anderes Netz aus." />
+            </p:panel>
+            <h:link outcome="open-nets.xhtml" value="Zur Übersicht offener Netze" styleClass="p-button p-button-link" />
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{ghostNetDetailsController.selectedNet != null}">
+        <h2>Geisternetz bei #{ghostNetDetailsController.selectedNet.location}</h2>
+        <div class="ui-g-12 ui-md-6">
+
+        <p:panel header="Details zum Geisternetz">
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputText value="Ort:" />
+                <h:outputText value="#{ghostNetDetailsController.selectedNet.location}" />
+
+                <h:outputText value="Größe (m²):" />
+                <h:outputText value="#{ghostNetDetailsController.selectedNet.sizeInSquareMeters}" />
+
+                <h:outputText value="Koordinaten:" />
+                <h:outputText value="#{ghostNetDetailsController.selectedNet.latLngFormatted}" />
+
+                <h:outputText value="Status:" />
+                <h:panelGroup>
+                    <ui:include src="/WEB-INF/components/net-status-badge.xhtml">
+                        <ui:param name="status" value="#{ghostNetDetailsController.selectedNet.statusStr}" />
+                    </ui:include>
+                </h:panelGroup>
+
+
+                <h:outputText value="Gemeldet am:" />
+                <h:outputText value="#{ghostNetDetailsController.selectedNet.reportedAt}" />
+            </h:panelGrid>
+
+            <p class="mt-2">
+                <ui:include src="/WEB-INF/components/map-link.xhtml">
+                    <ui:param name="lat" value="#{ghostNetDetailsController.selectedNet.lat}" />
+                    <ui:param name="lng" value="#{ghostNetDetailsController.selectedNet.lng}" />
+                </ui:include>
+            </p>
+        </p:panel>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+
+        <p:panel header="Meldende Person" >
+            <h:outputText value="Anonym" rendered="#{empty ghostNetDetailsController.selectedNet.reportingPerson.phoneNumber}" />
+            <h:panelGrid columns="2" rendered="#{not empty ghostNetDetailsController.selectedNet.reportingPerson.name}">
+                <h:outputText value="Name:" />
+                <h:outputText value="#{ghostNetDetailsController.selectedNet.reportingPerson.name}" />
+
+                <h:outputText value="Telefon:" />
+                <h:outputText value="#{ghostNetDetailsController.selectedNet.reportingPerson.phoneNumber}" />
+            </h:panelGrid>
+        </p:panel>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+        <p:panel header="Bergende Person" >
+            <h:outputText value="Noch nicht zugewiesen"
+                          rendered="#{empty ghostNetDetailsController.selectedNet.recoveryPerson}" />
+            <h:panelGrid columns="2"
+                         rendered="#{not empty ghostNetDetailsController.selectedNet.recoveryPerson}">
+                <h:outputText value="Name:" />
+                <h:outputText value="#{ghostNetDetailsController.selectedNet.recoveryPerson.name}" />
+
+                <h:outputText value="Telefon:" />
+                <h:outputText value="#{ghostNetDetailsController.selectedNet.recoveryPerson.phoneNumber}" />
+            </h:panelGrid>
+        </p:panel>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <p:panel header="Bergende Person" rendered="#{recoveryPersonSession.loggedIn and empty ghostNetDetailsController.selectedNet.recoveryPerson}">
+                <h:form>
+                    <p:commandButton value="Dieses Netz übernehmen"
+                                 icon="pi pi-user-plus"
+                                 action="#{ghostNetDetailsController.assignToCurrentUser(ghostNetDetailsController.selectedNet)}"
+                                 update="@form"
+                                 styleClass="p-button-success mt-3" />
+                </h:form>
+            </p:panel>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+
+        <p:panel header="Aktionen"
+                rendered="#{recoveryPersonSession.loggedIn
+                and ghostNetDetailsController.selectedNet.recoveryPerson != null
+                and ghostNetDetailsController.selectedNet.recoveryPerson.id == recoveryPersonSession.currentUser.id
+                and ghostNetDetailsController.selectedNet.statusStr ne 'RECOVERED'}">
+            <h:form class="mt-4">
+                <p:selectOneMenu value="#{ghostNetDetailsController.selectedNetStatus}" style="width: 200px;">
+                    <f:selectItem itemLabel="-- Status wählen --" itemValue="#{null}" />
+                    <f:selectItem itemLabel="Geborgen (RECOVERED)" itemValue="RECOVERED" />
+                    <f:selectItem itemLabel="Nicht auffindbar (LOST)" itemValue="LOST" />
+                </p:selectOneMenu>
+
+                <p:commandButton value="Status speichern"
+                                 icon="pi pi-save"
+                                 action="#{ghostNetDetailsController.updateStatus}"
+                                 update="@form"
+                                 styleClass="p-ml-2 p-button-sm" />
+            </h:form>
+        </p:panel>
+        </div>
+        <!-- Statusverlauf -->
+        <div class="ui-g-12 ui-md-6">
+            <p:panel header="Statusverlauf" styleClass="mt-4">
+                <p:dataTable value="#{ghostNetDetailsController.selectedNet.log}" var="logEntry" stripedRows="true">
+                    <p:column headerText="Status">
+                        <ui:include src="/WEB-INF/components/net-status-badge.xhtml">
+                            <ui:param name="status" value="#{logEntry.newStatus.name()}" />
+                        </ui:include>
+                    </p:column>
+
+                    <p:column headerText="Geändert am">
+                        <h:outputText value="#{logEntry.changedAtFormatted}" />
+                    </p:column>
+                    <p:column headerText="Geändert von">
+                        <ui:include src="/WEB-INF/components/user-badge.xhtml">
+                            <ui:param name="person" value="#{logEntry.changedByPerson}" />
+                        </ui:include>
+                    </p:column>
+                </p:dataTable>
+
+            </p:panel>
+
+            <!-- === Als verschollen melden === -->
+            <h:form id="lostActionForm">
+                <p:commandButton value="Als verschollen melden"
+                                 icon="pi pi-question-circle"
+                                 rendered="#{ghostNetDetailsController.canShowLostButton}"
+                                 actionListener="#{ghostNetDetailsController.prepareLostMarking}"
+                                 update="lostDialog"
+                                 oncomplete="if (!#{recoveryPersonSession.loggedIn}) PF('lostDialog').show()" />
+            </h:form>
+
+            <!-- Modal-Dialog für anonyme Meldung -->
+            <p:dialog id="lostDialog" header="Netz als verschollen melden" widgetVar="lostDialog"
+                      modal="true" closable="true" resizable="false">
+
+                <h:form id="lostForm">
+                    <p:messages id="lostMessages" autoUpdate="true" />
+
+                    <p:panelGrid columns="2" layout="grid" styleClass="p-fluid">
+
+                    <p:outputLabel for="anonName" value="Dein Name:" />
+                    <p:inputText id="anonName" value="#{ghostNetDetailsController.anonName}" required="true" />
+
+                    <p:outputLabel for="anonPhone" value="Telefonnummer:" />
+                    <p:inputText id="anonPhone" value="#{ghostNetDetailsController.anonPhone}" required="true" />
+                    </p:panelGrid>
+
+                    <p:commandButton value="Meldung absenden"
+                                     icon="pi pi-check"
+                                     action="#{ghostNetDetailsController.markAsLostAnonymously}"
+                                     process="@form"
+                                     update="lostForm lostMessages"
+                                     oncomplete="PF('lostDialog').hide()" />
+
+                </h:form>
+            </p:dialog>
+
+
+        </div>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

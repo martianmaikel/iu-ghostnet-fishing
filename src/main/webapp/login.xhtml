@@ -1,0 +1,46 @@
+<ui:composition template="/WEB-INF/layouts/main.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Login</ui:define>
+
+    <ui:define name="content">
+        <h2 class="text-center">Login für Berger</h2>
+
+        <h:form styleClass="form-wrapper">
+
+            <div class="card">
+                <div class="ui-fluid formgrid grid">
+                    <p:messages autoUpdate="true" closable="true" showSummary="true" showDetail="false" styleClass="col-12" />
+
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel for="email" value="E-Mail" />
+                        <p:inputText id="email" value="#{authRecoveryPersonController.email}" required="true" />
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel for="password" value="Passwort" />
+                        <p:password id="password" value="#{authRecoveryPersonController.password}" required="true" />
+                    </div>
+
+                    <div class="field col-12 text-center mt-3">
+                        <p:commandButton value="Login"
+                                         icon="pi pi-sign-in"
+                                         action="#{authRecoveryPersonController.login}"
+                                         update="@form"
+                                         styleClass="mt-2" />
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+        <p class="text-center mt-3">
+            Noch kein Account?
+            <h:outputLink value="register.xhtml">Jetzt registrieren</h:outputLink>
+        </p>
+
+    </ui:define>
+</ui:composition>

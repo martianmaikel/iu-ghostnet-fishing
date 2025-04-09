@@ -1,0 +1,62 @@
+<ui:composition template="/WEB-INF/layouts/main.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core">
+
+    <ui:define name="title">Geisternetz melden</ui:define>
+
+    <ui:define name="content">
+        <h2 class="mb-3">Geisternetz melden</h2>
+        <h:form>
+            <p:messages autoUpdate="true" closable="true" />
+
+            <div class="p-grid">
+                <!-- FUNDORT -->
+                <div class="p-col-12 p-md-6">
+                    <p:panel header="Fundort">
+                        <p:panelGrid columns="2" layout="grid" styleClass="p-fluid">
+                            <p:outputLabel for="location" value="Ort *" />
+                            <p:inputText id="location" value="#{ghostNetReportController.location}" required="true" />
+
+                            <p:outputLabel for="lat" value="Breitengrad (optional)" />
+                            <p:inputNumber id="lat"
+                                           value="#{ghostNetReportController.lat}"
+                                           decimalPlaces="6"
+                                           converter="jakarta.faces.BigDecimal" />
+
+                            <p:outputLabel for="lng" value="Längengrad (optional)" />
+                            <p:inputNumber id="lng"
+                                           value="#{ghostNetReportController.lng}"
+                                           decimalPlaces="6"
+                                           converter="jakarta.faces.BigDecimal" />
+                            <p:outputLabel for="size" value="Größe geschätzt (m²) *" />
+                            <p:inputNumber id="size" value="#{ghostNetReportController.size}" required="true" minValue="0" />
+                        </p:panelGrid>
+                    </p:panel>
+                </div>
+
+                <!-- KONTAKTDATEN -->
+                <div class="p-col-12 p-md-6">
+                    <p:panel header="Kontaktdaten (optional)">
+                        <p:panelGrid columns="2" layout="grid" styleClass="p-fluid">
+                            <p:outputLabel for="name" value="Name (optional)" />
+                            <p:inputText id="name" value="#{ghostNetReportController.name}" />
+
+                            <p:outputLabel for="phone" value="Telefonnummer (optional)" />
+                            <p:inputText id="phone" value="#{ghostNetReportController.phoneNumber}" />
+                        </p:panelGrid>
+                    </p:panel>
+                </div>
+            </div>
+            <br/>
+            <p:commandButton value="Geisternetz melden"
+                             icon="pi pi-send"
+                             action="#{ghostNetReportController.submit}"
+                             update="@form"
+                             styleClass="p-mt-3 p-button-success" />
+        </h:form>
+
+    </ui:define>
+</ui:composition>

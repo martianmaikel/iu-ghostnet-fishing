@@ -1,0 +1,54 @@
+<ui:composition template="/WEB-INF/layouts/main.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Dashboard</ui:define>
+
+    <ui:define name="content">
+
+        <h2>Meine Übersicht</h2>
+
+        <h:form id="mainForm">
+            <p:selectOneRadio value="#{restrictedGhostNetsController.viewMode}" layout="lineDirection">
+                <f:selectItem itemLabel="Meine Netze" itemValue="MY_NETS" />
+                <f:selectItem itemLabel="Offene Netze" itemValue="OPEN_NETS" />
+                <f:selectItem itemLabel="Anderen zugewiesene Netze" itemValue="IN_RECOVERY_NETS_NOT_ME" />
+            </p:selectOneRadio>
+
+            <p:commandButton value="Anzeigen"
+                             action="#{restrictedGhostNetsController.refresh}"
+                             update="netsPanel"
+                             icon="pi pi-search"
+                             styleClass="p-ml-2 p-button-sm" />
+
+            <p class="mt-3" />
+
+            <!-- ✅ Jetzt innerhalb des Forms -->
+            <h:panelGroup id="netsPanel">
+                <h:panelGroup rendered="#{not empty restrictedGhostNetsController.ghostNets}">
+                    <ui:include src="/WEB-INF/components/ghostnets-datatable.xhtml">
+                        <ui:param name="nets" value="#{restrictedGhostNetsController.ghostNets}" />
+                    </ui:include>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{empty restrictedGhostNetsController.ghostNets}">
+                    <p:message severity="info"
+                               summary="Keine passenden Netze gefunden"
+                               detail="Für die aktuelle Auswahl konnten keine Geisternetze gefunden werden." />
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+
+
+        <!-- Navigation -->
+        <p class="mt-4">
+            <h:outputLink value="#{request.contextPath}/report-net.xhtml">
+                Geisternetz jetzt melden
+            </h:outputLink>
+        </p>
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets">
+
+    <ui:param name="status" value="#{status}" />
+
+    <h:panelGroup layout="block"
+                  styleClass="status-badge #{status.toLowerCase()}"
+                  rendered="#{not empty status}">
+        <h:outputText value="#{
+      status eq 'REPORTED' ? '📝 Gemeldet' :
+      status eq 'ASSIGNED' ? '👷 Zugewiesen' :
+      status eq 'RECOVERED' ? '✅ Geborgen' :
+      status eq 'LOST' ? '❌ Verloren' :
+      'Unbekannt'
+    }" />
+    </h:panelGroup>
+
+    <style>
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            color: white;
+        }
+        .status-badge.reported {
+            background-color: #FFA500; /* Orange */
+        }
+        .status-badge.assigned {
+            background-color: #007BFF; /* Blau */
+        }
+        .status-badge.recovered {
+            background-color: #28a745; /* Grün */
+        }
+        .status-badge.lost {
+            background-color: #dc3545; /* Rot */
+        }
+    </style>
+</ui:composition>
