@@ -20,13 +20,12 @@
 
             <p:commandButton value="Anzeigen"
                              action="#{restrictedGhostNetsController.refresh}"
-                             update="netsPanel"
+                             update="mainForm:netsPanel"
                              icon="pi pi-search"
                              styleClass="p-ml-2 p-button-sm" />
 
             <p class="mt-3" />
 
-            <!-- ✅ Jetzt innerhalb des Forms -->
             <h:panelGroup id="netsPanel">
                 <h:panelGroup rendered="#{not empty restrictedGhostNetsController.ghostNets}">
                     <ui:include src="/WEB-INF/components/ghostnets-datatable.xhtml">
@@ -35,15 +34,14 @@
                 </h:panelGroup>
 
                 <h:panelGroup rendered="#{empty restrictedGhostNetsController.ghostNets}">
-                    <p:message severity="info"
-                               summary="Keine passenden Netze gefunden"
-                               detail="Für die aktuelle Auswahl konnten keine Geisternetze gefunden werden." />
+                    <p:outputPanel styleClass="ui-message-info">
+                        <i class="pi pi-info-circle" /> Für die aktuelle Auswahl konnten keine Geisternetze gefunden werden.
+                    </p:outputPanel>
                 </h:panelGroup>
             </h:panelGroup>
         </h:form>
 
 
-        <!-- Navigation -->
         <p class="mt-4">
             <h:outputLink value="#{request.contextPath}/report-net.xhtml">
                 Geisternetz jetzt melden
